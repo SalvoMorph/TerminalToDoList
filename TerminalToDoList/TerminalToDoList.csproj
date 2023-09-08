@@ -16,6 +16,8 @@
     <None Remove="Interfaces\Managers\" />
     <None Remove="Services\" />
     <None Remove="Interfaces\Services\" />
+    <None Remove="DataProviders\" />
+    <None Remove="Interfaces\DataProviders\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -26,5 +28,11 @@
     <Folder Include="Interfaces\Managers\" />
     <Folder Include="Services\" />
     <Folder Include="Interfaces\Services\" />
+    <Folder Include="DataProviders\" />
+    <Folder Include="Interfaces\DataProviders\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Data.SQLite" Version="1.0.118" PrivateAssets="none"/>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" PrivateAssets="none"/>
   </ItemGroup>
 </Project>

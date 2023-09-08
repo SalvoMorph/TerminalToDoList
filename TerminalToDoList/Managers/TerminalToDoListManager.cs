@@ -20,7 +20,7 @@ namespace TerminalToDoList.Managers
         public TerminalToDoListManager (ILogger logger)
 		{
 			_logger = logger ?? new ConsoleLogger();
-            _terminalToDoListService = new TerminalToDoListService(_logger);
+            _terminalToDoListService = new TerminalToDoListService();
         }
 
         public void Start(string[] args)

@@ -1,4 +1,6 @@
-﻿using TerminalToDoList.Interfaces.Logger;
+﻿using TerminalToDoList.DataProviders;
+using TerminalToDoList.Interfaces.DataProviders;
+using TerminalToDoList.Interfaces.Logger;
 using TerminalToDoList.Interfaces.Services;
 using TerminalToDoList.Logger;
 using static TerminalToDoList.Models.TerminalToDoListConstants;
@@ -9,6 +11,7 @@ namespace TerminalToDoList.Services
 	internal class TerminalToDoListService : ITerminalToDoListService
     {
         private readonly ILogger _logger;
+        private readonly ITerminalToDoListDataProvider _terminalToDoListDataProvider;
         static List<string> tasks = new();
 
         #region Ctor
@@ -19,15 +22,18 @@ namespace TerminalToDoList.Services
         public TerminalToDoListService()
         {
             _logger = new ConsoleLogger();
+            _terminalToDoListDataProvider = new TerminalToDoListDataProvider();
         }
 
         /// <summary>
         /// Ctor of <see cref="TerminalToDoListService"/>
         /// </summary>
         /// <param name="logger">The Logger Interface.</param>
-        public TerminalToDoListService(ILogger logger)
+        /// <param name="terminalToDoListDataProvider">The TerminalToDoListDataProvider Interface.</param>
+        public TerminalToDoListService(ILogger logger, ITerminalToDoListDataProvider terminalToDoListDataProvider)
 		{
             _logger = logger ?? new ConsoleLogger();
+            _terminalToDoListDataProvider = terminalToDoListDataProvider;
 		}
 
         #endregion
@@ -43,7 +49,7 @@ namespace TerminalToDoList.Services
                 message = Console.ReadLine();
             }
 
-            tasks.Add(message);
+            _terminalToDoListDataProvider.AddNote(message);
 
             _logger.Log(LogLevel.Info, "done!");
             _logger.Log(LogLevel.Info, "...");
@@ -99,21 +105,13 @@ namespace TerminalToDoList.Services
         /// <inheritdoc cref="ITerminalToDoListService.ViewActivities(int)"/>
         public void ViewActivities(int idNote = 0)
         {
-            if (idNote == 0)
-            {
-                Console.WriteLine("Activities:");
-                for (int i = 0; i < tasks.Count; i++)
-                {
-                    _logger.Log(LogLevel.Info, $"Activity {i + 1}. {tasks[i]}");
-                    Console.WriteLine();
-                }
+            var activities = _terminalToDoListDataProvider.ShowNote(idNote);
 
-                _logger.Log(LogLevel.Info, "...");
-                Console.ReadLine();
-                return;
+            foreach (var activity in activities)
+            {
+                _logger.Log(LogLevel.Info, activity);
             }
 
-            _logger.Log(LogLevel.Info, $"Activity {idNote}. {tasks[idNote]}");
             _logger.Log(LogLevel.Info, "...");
             Console.ReadLine();
         }
