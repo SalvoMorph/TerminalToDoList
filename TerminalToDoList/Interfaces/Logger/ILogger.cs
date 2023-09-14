@@ -14,10 +14,10 @@ namespace TerminalToDoList.Interfaces.Logger
 		/// <param name="message">The message.</param>
 		void Log(LogLevel level, string message);
 
-		/// <summary>
-		/// Show the menu.
-		/// </summary>
-		void ShowMenu();
+        /// <summary>
+        /// Show the menu.
+        /// </summary>
+        void ShowMenu();
 
 		/// <summary>
 		/// Show the Help menu.

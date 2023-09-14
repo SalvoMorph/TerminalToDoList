@@ -54,5 +54,20 @@
 
 			public const string ViewNoteAll = "ALL";
 		}
-	}
+
+        /// <summary>
+        /// The User choice.
+        /// </summary>
+        public enum UserChoice
+        {
+            Add = 1,
+            View = 2,
+            ViewAll = 3,
+            ViewCompleted= 4,
+            ViewAllCompleted = 5,
+            Complete = 6,
+            Delete = 7,
+            Exit = 8
+        }
+    }
 }

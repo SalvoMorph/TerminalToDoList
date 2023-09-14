@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using TerminalToDoList.Interfaces.DataProviders;
 using TerminalToDoList.Interfaces.Logger;
 using TerminalToDoList.Logger;
+using TerminalToDoList.Models;
 using static TerminalToDoList.Models.TerminalToDoListConstants;
 
 namespace TerminalToDoList.DataProviders
@@ -16,6 +14,9 @@ namespace TerminalToDoList.DataProviders
 
         private const string ConnectionString = "Data Source=notes.db;Version=3;";
 
+        /// <summary>
+        /// Ctor of <see cref="TerminalToDoListDataProvider"/>
+        /// </summary>
         public TerminalToDoListDataProvider() 
 		{
             _logger = new ConsoleLogger();
@@ -29,7 +30,8 @@ namespace TerminalToDoList.DataProviders
                 CREATE TABLE IF NOT EXISTS Notes (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Content TEXT NOT NULL,
-                    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+                    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                    CompletedAt DATETIME NULL
                 );";
 
                 using SQLiteCommand createTableCommand = new(createTableQuery, connection);
@@ -42,6 +44,7 @@ namespace TerminalToDoList.DataProviders
             }
         }
 
+        /// <inheritdoc cref="ITerminalToDoListDataProvider.AddNote(string)"/>
         public void AddNote(string message)
         {
             using SQLiteConnection connection = new(ConnectionString);
@@ -54,29 +57,74 @@ namespace TerminalToDoList.DataProviders
             insertNoteCommand.ExecuteNonQuery();
         }
 
-        public List<string> ShowNote(int idNote = 0)
+        /// <inheritdoc cref="ITerminalToDoListDataProvider.DeleteNote(int)"/>
+        public void DeleteNote(int idNote)
         {
-            var result = new List<string>();
+            using SQLiteConnection connection = new(ConnectionString);
+            connection.Open();
+
+            string deleteNoteQuery = $"DELETE * FROM Notes WHERE Id = {idNote};";
+            using SQLiteCommand selectNotesCommand = new(deleteNoteQuery, connection);
+            _ = selectNotesCommand.ExecuteNonQuery();
+        }
+
+        /// <inheritdoc cref="ITerminalToDoListDataProvider.CompleteNote(int)"/>
+        public void CompleteNote(int idNote)
+        {
+            throw new NotImplementedException();
+        }
+
+        #region Show
+
+        /// <inheritdoc cref="ITerminalToDoListDataProvider.ShowNote(int)"/>
+        public List<Note> ShowNote(int idNote)
+        {
+            string selectNotesQuery = $"SELECT * FROM Notes WHERE CompletedAt IS NULL AND Id = {idNote};";
+            return GetNotes(selectNotesQuery);
+        }
+
+        /// <inheritdoc cref="ITerminalToDoListDataProvider.ShowAllNotes()"/>
+        public List<Note> ShowAllNotes()
+        {
+            string selectNotesQuery = "SELECT * FROM Notes WHERE CompletedAt IS NULL;";
+            return GetNotes(selectNotesQuery);
+        }
+
+        /// <inheritdoc cref="ITerminalToDoListDataProvider.ShowCompletedNote(int)"/>
+        public List<Note> ShowCompletedNote(int idNote)
+        {
+            string selectNotesQuery = $"SELECT * FROM Notes WHERE CompletedAt IS NOT NULL AND Id = {idNote}";
+            return GetNotes(selectNotesQuery);
+        }
+
+        /// <inheritdoc cref="ITerminalToDoListDataProvider.ShowAllCompletedNote()"/>
+        public List<Note> ShowAllCompletedNote()
+        {
+            string selectNotesQuery = "SELECT * FROM Notes WHERE CompletedAt IS NOT NULL;";
+            return GetNotes(selectNotesQuery);
+        }
+
+        #endregion
+
+
+
+        private static List<Note> GetNotes(string query)
+        {
+            var result = new List<Note>();
 
             using SQLiteConnection connection = new(ConnectionString);
             connection.Open();
 
-            string selectNotesQuery = idNote == 0 ? "SELECT * FROM Notes;" : $"SELECT * FROM Notes WHERE Id={idNote};";
-
-            using SQLiteCommand selectNotesCommand = new(selectNotesQuery, connection);
+            using SQLiteCommand selectNotesCommand = new(query, connection);
             using SQLiteDataReader reader = selectNotesCommand.ExecuteReader();
 
             while (reader.Read())
             {
-                int id = reader.GetInt32(0);
-                string content = reader.GetString(1);
-                DateTime createdAt = reader.GetDateTime(2);
-
-                result.Add($"ID: {id}, Contenuto: {content}, Creato il: {createdAt}");
+                Note note = new(reader.GetInt32(0), reader.GetString(1), reader.GetDateTime(2));
+                result.Add(note);
             }
 
             return result;
-
         }
     }
 }

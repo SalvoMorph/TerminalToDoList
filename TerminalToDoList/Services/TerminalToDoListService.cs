@@ -3,6 +3,8 @@ using TerminalToDoList.Interfaces.DataProviders;
 using TerminalToDoList.Interfaces.Logger;
 using TerminalToDoList.Interfaces.Services;
 using TerminalToDoList.Logger;
+using TerminalToDoList.Models;
+using TerminalToDoList.Utils;
 using static TerminalToDoList.Models.TerminalToDoListConstants;
 
 namespace TerminalToDoList.Services
@@ -12,7 +14,6 @@ namespace TerminalToDoList.Services
     {
         private readonly ILogger _logger;
         private readonly ITerminalToDoListDataProvider _terminalToDoListDataProvider;
-        static List<string> tasks = new();
 
         #region Ctor
 
@@ -40,15 +41,7 @@ namespace TerminalToDoList.Services
 
         /// <inheritdoc cref="ITerminalToDoListService.AddNote(string)"/>
         public void AddNote(string message)
-        {
-            if (string.IsNullOrEmpty(message))
-            {
-
-                _logger.Log(LogLevel.Info, "Add new activity: ");
-
-                message = Console.ReadLine();
-            }
-
+        { 
             _terminalToDoListDataProvider.AddNote(message);
 
             _logger.Log(LogLevel.Info, "done!");
@@ -56,66 +49,64 @@ namespace TerminalToDoList.Services
             Console.ReadLine();
         }
 
-        /// <inheritdoc cref="ITerminalToDoListService.CompleteActivity(int)"/>
-        public void CompleteActivity(int idNote = 0)
+        /// <inheritdoc cref="ITerminalToDoListService.CompleteNote(int)"/>
+        public void CompleteNote(int idNote)
         {
-            if (idNote == 0)
-            {
-                _logger.Log(LogLevel.Info, "Add activity number: ");
-                _ = int.TryParse(Console.ReadLine(), out idNote);
-            }
+            _terminalToDoListDataProvider.CompleteNote(idNote);
 
-            if (idNote >= 1 && idNote <= tasks.Count)
-            {
-                tasks.RemoveAt(idNote - 1);
-                _logger.Log(LogLevel.Info, "Activity marked as completed!");
-                _logger.Log(LogLevel.Info, "...");
-                Console.ReadLine();
-                return;
-            }
-
-            _logger.Log(LogLevel.Warning, "Activity not present!");
+            _logger.Log(LogLevel.Info, "Activity marked as completed!");
             _logger.Log(LogLevel.Info, "...");
             Console.ReadLine();
         }
 
         /// <inheritdoc cref="ITerminalToDoListService.DeleteNote(int)"/>
-        public void DeleteNote(int idNote = 0)
+        public void DeleteNote(int idNote)
         {
-            if(idNote == 0)
-            {
-                _logger.Log(LogLevel.Info, "Add activity number to delete: ");
-                _ = int.TryParse(Console.ReadLine(), out idNote);
-            }
-
-            if (idNote >= 1 && idNote <= tasks.Count)
-            {
-                tasks.RemoveAt(idNote - 1);
-                _logger.Log(LogLevel.Info, "Activity deleted!");
-                _logger.Log(LogLevel.Info, "...");
-                Console.ReadLine();
-                return;
-            }
-
-            _logger.Log(LogLevel.Warning, "Activity not present!");
-            _logger.Log(LogLevel.Info, "...");
-            Console.ReadLine();
-        }
-
-        /// <inheritdoc cref="ITerminalToDoListService.ViewActivities(int)"/>
-        public void ViewActivities(int idNote = 0)
-        {
-            var activities = _terminalToDoListDataProvider.ShowNote(idNote);
-
-            foreach (var activity in activities)
-            {
-                _logger.Log(LogLevel.Info, activity);
-            }
+            _terminalToDoListDataProvider.DeleteNote(idNote);
+            _logger.Log(LogLevel.Info, "Activity deleted!");
 
             _logger.Log(LogLevel.Info, "...");
             Console.ReadLine();
         }
 
+        /// <inheritdoc cref="ITerminalToDoListService.ViewNote(int)"/>
+        public void ViewNote(int idNote)
+        {
+            var notes = _terminalToDoListDataProvider.ShowNote(idNote);
+            PrintNote(notes);
+        }
+
+        /// <inheritdoc cref="ITerminalToDoListService.ViewNote(int)"/>
+        public void ViewAllNote()
+        {
+            var notes = _terminalToDoListDataProvider.ShowAllNotes();
+            PrintNote(notes);
+        }
+
+        /// <inheritdoc cref="ITerminalToDoListService.ViewCompletedNote(int)"/>
+        public void ViewCompletedNote(int idNote)
+        {
+            var notes = _terminalToDoListDataProvider.ShowCompletedNote(idNote);
+            PrintNote(notes);
+        }
+
+        /// <inheritdoc cref="ITerminalToDoListService.ViewAllCompletedNote()"/>
+        public void ViewAllCompletedNote()
+        {
+            var notes = _terminalToDoListDataProvider.ShowAllCompletedNote();
+            PrintNote(notes);
+        }
+
+        private void PrintNote(List<Note> notes)
+        {
+            foreach (var note in notes)
+            {
+                string formattedNote = NoteFormatter.Format(note);
+                _logger.Log(LogLevel.Info, formattedNote);
+            }
+
+            _logger.Log(LogLevel.Info, "...");
+            Console.ReadLine();
+        }
     }
 }
-
