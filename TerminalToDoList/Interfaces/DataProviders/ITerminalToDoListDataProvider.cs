@@ -43,7 +43,8 @@ namespace TerminalToDoList.Interfaces.DataProviders
         /// Delete a note.
         /// </summary>
         /// <param name="idNote">The note ID to delete.</param>
-        void DeleteNote(int idNote);
+        /// <returns>Return true if the note has been deleted.</returns>
+        bool DeleteNote(int idNote);
 
         /// <summary>
         /// Complete a note.

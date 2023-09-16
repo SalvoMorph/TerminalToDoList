@@ -34,14 +34,14 @@ namespace TerminalToDoList.Logger
             var sb = new StringBuilder();
             sb.AppendLine("####### Terminal ToDoList menu #######");
             sb.AppendLine("Your choise?");
-            sb.AppendLine($"{UserChoice.Add}. Add a new note.");
-            sb.AppendLine($"{UserChoice.View}. Show a specific note.");
-            sb.AppendLine($"{UserChoice.ViewAll}. Show all notes.");
-            sb.AppendLine($"{UserChoice.ViewCompleted}. Show a specific completed note.");
-            sb.AppendLine($"{UserChoice.ViewAllCompleted}. Show all completed note.");
-            sb.AppendLine($"{UserChoice.Complete}. Complete an activity.");
-            sb.AppendLine($"{UserChoice.Delete}. Delete an activity.");
-            sb.AppendLine($"{UserChoice.Exit}. Exit.");
+            sb.AppendLine($"{(int)UserChoice.Add} => Add a new note.");
+            sb.AppendLine($"{(int)UserChoice.View} => Show a specific note.");
+            sb.AppendLine($"{(int)UserChoice.ViewAll} => Show all notes.");
+            sb.AppendLine($"{(int)UserChoice.ViewCompleted} => Show a specific completed note.");
+            sb.AppendLine($"{(int)UserChoice.ViewAllCompleted} => Show all completed note.");
+            sb.AppendLine($"{(int)UserChoice.Complete} => Complete an activity.");
+            sb.AppendLine($"{(int)UserChoice.Delete} => Delete an activity.");
+            sb.AppendLine($"{(int)UserChoice.Exit} => Exit.");
 
             return sb.ToString();
         }

@@ -58,14 +58,16 @@ namespace TerminalToDoList.DataProviders
         }
 
         /// <inheritdoc cref="ITerminalToDoListDataProvider.DeleteNote(int)"/>
-        public void DeleteNote(int idNote)
+        public bool DeleteNote(int idNote)
         {
             using SQLiteConnection connection = new(ConnectionString);
             connection.Open();
 
             string deleteNoteQuery = $"DELETE * FROM Notes WHERE Id = {idNote};";
             using SQLiteCommand selectNotesCommand = new(deleteNoteQuery, connection);
-            _ = selectNotesCommand.ExecuteNonQuery();
+            var result = selectNotesCommand.ExecuteNonQuery();
+
+            return result != 0;
         }
 
         /// <inheritdoc cref="ITerminalToDoListDataProvider.CompleteNote(int)"/>

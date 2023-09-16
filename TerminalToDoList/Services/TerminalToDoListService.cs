@@ -54,7 +54,7 @@ namespace TerminalToDoList.Services
         {
             _terminalToDoListDataProvider.CompleteNote(idNote);
 
-            _logger.Log(LogLevel.Info, "Activity marked as completed!");
+            _logger.Log(LogLevel.Info, "Note marked as completed!");
             _logger.Log(LogLevel.Info, "...");
             Console.ReadLine();
         }
@@ -62,11 +62,14 @@ namespace TerminalToDoList.Services
         /// <inheritdoc cref="ITerminalToDoListService.DeleteNote(int)"/>
         public void DeleteNote(int idNote)
         {
-            _terminalToDoListDataProvider.DeleteNote(idNote);
-            _logger.Log(LogLevel.Info, "Activity deleted!");
-
-            _logger.Log(LogLevel.Info, "...");
-            Console.ReadLine();
+            if (_terminalToDoListDataProvider.DeleteNote(idNote))
+            {
+                _logger.Log(LogLevel.Info, "Note deleted!");
+                _logger.Log(LogLevel.Info, "...");
+                Console.ReadLine();
+                return;
+            }
+            _logger.Log(LogLevel.Info, $"Note {idNote} not present!");
         }
 
         /// <inheritdoc cref="ITerminalToDoListService.ViewNote(int)"/>
@@ -99,6 +102,12 @@ namespace TerminalToDoList.Services
 
         private void PrintNote(List<Note> notes)
         {
+            if(notes == null || ! notes.Any())
+            {
+                _logger.Log(LogLevel.Info, "No note to show.");
+                return;
+            }
+
             foreach (var note in notes)
             {
                 string formattedNote = NoteFormatter.Format(note);
