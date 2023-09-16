@@ -15,4 +15,3 @@ namespace TerminalToDoList.Interfaces.Factory
         TerminalCmdLineArgument? Create(string[] args);
 	}
 }
-
