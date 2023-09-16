@@ -47,12 +47,13 @@
         /// </summary>
         public class CmdLineArgs
 		{
-			public const string AddNote = "-note";
+			public const string AddNote = "-a";
 			public const string DeleteNote = "-d";
 			public const string CompleteNote = "-c";
 			public const string ViewNote = "-v";
+            public const string ViewCompletedNote = "-vc";
 
-			public const string ViewNoteAll = "ALL";
+			public const string All = "ALL";
 		}
 
         /// <summary>

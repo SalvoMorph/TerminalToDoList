@@ -1,12 +1,9 @@
-﻿using TerminalToDoList.Interfaces.Logger;
-using TerminalToDoList.Interfaces.Managers;
-using TerminalToDoList.Logger;
+﻿using TerminalToDoList.Interfaces.Managers;
 using TerminalToDoList.Managers;
 
 class Program
 {
-    private static readonly ILogger _logger = new ConsoleLogger();
-    private static readonly ITerminalToDoListManager _terminalToDoListManager = new TerminalToDoListManager(_logger);
+    private static readonly ITerminalToDoListManager _terminalToDoListManager = new TerminalToDoListManager();
 
     static void Main(string[] args)
     {

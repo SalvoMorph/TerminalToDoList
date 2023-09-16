@@ -1,6 +1,7 @@
 ﻿using TerminalToDoList.Interfaces.Logger;
 using TerminalToDoList.Interfaces.Services;
 using TerminalToDoList.Logger;
+using TerminalToDoList.Models;
 using static TerminalToDoList.Models.TerminalToDoListConstants;
 
 namespace TerminalToDoList.Services
@@ -9,7 +10,7 @@ namespace TerminalToDoList.Services
     public class UserInterfaceService : IUserInterfaceService
     {
         private readonly ILogger _logger;
-        private readonly ITerminalToDoListService _terminalToDoListService;
+        private readonly ICommandLineService _commandLineService;
 
         #region Ctor
 
@@ -19,18 +20,18 @@ namespace TerminalToDoList.Services
         public UserInterfaceService()
         {
             _logger = new ConsoleLogger();
-            _terminalToDoListService = new TerminalToDoListService();
+            _commandLineService = new CommandLineService();
         }
 
         /// <summary>
         /// Ctor of <see cref="UserInterfaceService"/>.
         /// </summary>
         /// <param name="logger">The Logger Interface.</param>
-        /// <param name="terminalToDoListService">The TerminalToDoListService Interface.</param>
-        public UserInterfaceService(ILogger logger, ITerminalToDoListService terminalToDoListService)
+        /// <param name="commandLineService">The CommandLineService Interface.</param>
+        public UserInterfaceService(ILogger logger, ICommandLineService commandLineService)
         {
             _logger = logger;
-            _terminalToDoListService = terminalToDoListService;
+            _commandLineService = commandLineService;
         }
 
         #endregion
@@ -44,49 +45,19 @@ namespace TerminalToDoList.Services
 
                 if (Enum.TryParse(Console.ReadLine(), out UserChoice choice))
                 {
-                    int idNote;
+                    var argument = new TerminalCmdLineArgument() { CmdLineArg = choice };
 
-                    switch (choice)
+                    if (IsInputRequired(choice))
                     {
-                        case UserChoice.Add:
-                            _logger.Log(LogLevel.Info, "Add new activity: ");
-                            string message = Console.ReadLine();
-                            _terminalToDoListService.AddNote(message);
-                            break;
-
-                        case UserChoice.View:
-                            idNote = ReadNoteIdFromConsole("Id note to show: ");
-                            _terminalToDoListService.ViewNote(idNote);
-                            break;
-
-                        case UserChoice.ViewAll:
-                            _terminalToDoListService.ViewAllNote();
-                            break;
-
-                        case UserChoice.ViewCompleted:
-                            idNote = ReadNoteIdFromConsole("Id note to show: ");
-                            _terminalToDoListService.ViewCompletedNote(idNote);
-                            break;
-
-                        case UserChoice.ViewAllCompleted:
-                            _terminalToDoListService.ViewAllCompletedNote();
-                            break;
-
-                        case UserChoice.Complete: // Complete a note
-                            idNote = ReadNoteIdFromConsole("Id note to complete: ");
-                            _terminalToDoListService.CompleteNote(idNote);
-                            break;
-
-                        case UserChoice.Delete:
-                            idNote = ReadNoteIdFromConsole("Id note to delete: ");
-                            _terminalToDoListService.DeleteNote(idNote);
-                            break;
-
-                        case UserChoice.Exit: // Exit
-                        default:
-                            _logger.Log(LogLevel.Info, "Goodbye!");
-                            return;
+                        argument.CmdLineValue = ReadFromConsole(GetInputMessage(choice));
                     }
+                    else if (choice == UserChoice.Exit)
+                    {
+                        _logger.Log(LogLevel.Info, "Goodbye!");
+                        return;
+                    }
+
+                    _commandLineService.CallProperService(argument);
                 }
                 else
                 {
@@ -95,12 +66,21 @@ namespace TerminalToDoList.Services
             }
         }
 
-        private int ReadNoteIdFromConsole(string message)
+        private bool IsInputRequired(UserChoice choice)
+        {
+            return choice == UserChoice.View || choice == UserChoice.ViewCompleted ||
+                   choice == UserChoice.Complete || choice == UserChoice.Delete || choice == UserChoice.Add;
+        }
+
+        private string GetInputMessage(UserChoice choice)
+        {
+            return choice == UserChoice.Add ? "Add new activity: " : "Id note: ";
+        }
+
+        private string ReadFromConsole(string message)
         {
             _logger.Log(LogLevel.Info, message);
-            _ = int.TryParse(Console.ReadLine(), out var idNote);
-
-            return idNote;
+            return Console.ReadLine();
         }
 
     }
