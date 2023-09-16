@@ -79,8 +79,17 @@ namespace TerminalToDoList.Services
 
         private string ReadFromConsole(string message)
         {
-            _logger.Log(LogLevel.Info, message);
-            return Console.ReadLine();
+            string input;
+            do
+            {
+                _logger.Log(LogLevel.Info, message);
+
+#pragma warning disable CS8600 // Conversione del valore letterale Null o di un possibile valore Null in un tipo che non ammette i valori Null.
+                input = Console.ReadLine();
+#pragma warning restore CS8600 // Conversione del valore letterale Null o di un possibile valore Null in un tipo che non ammette i valori Null.
+            } while (string.IsNullOrWhiteSpace(input));
+
+            return input;
         }
 
     }

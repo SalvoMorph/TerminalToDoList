@@ -42,7 +42,9 @@ namespace TerminalToDoList.Services
             var action = _userChoiceService.GetProperTerminalServiceMethod(argument);
 
             if (action != null)
-                action.Invoke(argument.CmdLineValue);
+#pragma warning disable CS8604 // Possibile argomento di riferimento Null.
+                action.Invoke(obj: argument.CmdLineValue);
+#pragma warning restore CS8604 // Possibile argomento di riferimento Null.
             else
                 _logger.Log(LogLevel.Info, "Goodbye");
         }

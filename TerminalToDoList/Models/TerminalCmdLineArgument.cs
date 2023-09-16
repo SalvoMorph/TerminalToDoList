@@ -15,6 +15,6 @@ namespace TerminalToDoList.Models
 		/// <summary>
 		/// The value.
 		/// </summary>
-		public string CmdLineValue { get; set; }
+		public string? CmdLineValue { get; set; }
 	}
 }
