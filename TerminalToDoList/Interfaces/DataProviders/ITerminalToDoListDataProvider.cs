@@ -2,22 +2,23 @@
 
 namespace TerminalToDoList.Interfaces.DataProviders
 {
-	/// <summary>
-	/// The TerminalToDoList Data provider
-	/// </summary>
-	public interface ITerminalToDoListDataProvider
-	{
-		/// <summary>
-		/// Add a note in the database.
-		/// </summary>
-		/// <param name="message">The message to save.</param>
-		void AddNote(string message);
+    /// <summary>
+    /// The TerminalToDoList Data provider
+    /// </summary>
+    public interface ITerminalToDoListDataProvider
+    {
+        /// <summary>
+        /// Add a note in the database.
+        /// </summary>
+        /// <param name="message">The message to save.</param>
+        /// <returns>The Id of the added note.</returns>
+        int AddNote(string message);
 
-		/// <summary>
-		/// Show the saved notes.
-		/// </summary>
-		/// <param name="idNote">The note ID to show. If 0, will display all the notes.</param>
-		/// <returns>A list of <see cref="Note"/>.</returns>
+        /// <summary>
+        /// Show the saved notes.
+        /// </summary>
+        /// <param name="idNote">The note ID to show. If 0, will display all the notes.</param>
+        /// <returns>A list of <see cref="Note"/>.</returns>
         List<Note> ShowNote(int idNote);
 
         /// <summary>
@@ -47,9 +48,16 @@ namespace TerminalToDoList.Interfaces.DataProviders
         bool DeleteNote(int idNote);
 
         /// <summary>
+        /// Delete all notes.
+        /// </summary>
+        /// <returns>Return true if the note has been deleted.</returns>
+        bool DeleteAllNotes();
+
+        /// <summary>
         /// Complete a note.
         /// </summary>
         /// <param name="idNote">The note ID to marked as complete.</param>
-        void CompleteNote(int idNote);
+        /// <returns>True if success.</returns>
+        bool CompleteNote(int idNote);
     }
 }

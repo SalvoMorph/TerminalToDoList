@@ -32,31 +32,31 @@ namespace TerminalToDoList.Services
         /// <param name="logger">The Logger Interface.</param>
         /// <param name="terminalToDoListDataProvider">The TerminalToDoListDataProvider Interface.</param>
         public TerminalToDoListService(ILogger logger, ITerminalToDoListDataProvider terminalToDoListDataProvider)
-		{
+        {
             _logger = logger ?? new ConsoleLogger();
             _terminalToDoListDataProvider = terminalToDoListDataProvider;
-		}
+        }
 
         #endregion
 
         /// <inheritdoc cref="ITerminalToDoListService.AddNote(string)"/>
         public void AddNote(string message)
-        { 
-            _terminalToDoListDataProvider.AddNote(message);
+        {
+            var id = _terminalToDoListDataProvider.AddNote(message);
 
-            _logger.Log(LogLevel.Info, "done!");
-            _logger.Log(LogLevel.Info, "...");
-            Console.ReadLine();
+            _logger.Log(LogLevel.Info, $"Added note {id} !");
+            _logger.Log(LogLevel.Info, $"");
         }
 
         /// <inheritdoc cref="ITerminalToDoListService.CompleteNote(int)"/>
         public void CompleteNote(int idNote)
         {
-            _terminalToDoListDataProvider.CompleteNote(idNote);
+            if (_terminalToDoListDataProvider.CompleteNote(idNote))
+                _logger.Log(LogLevel.Info, $"Note {idNote} marked as completed!");
+            else
+                _logger.Log(LogLevel.Warning, $"Note {idNote} not marked as completed!");
 
-            _logger.Log(LogLevel.Info, "Note marked as completed!");
-            _logger.Log(LogLevel.Info, "...");
-            Console.ReadLine();
+            _logger.Log(LogLevel.Info, $"");
         }
 
         /// <inheritdoc cref="ITerminalToDoListService.DeleteNote(int)"/>
@@ -64,12 +64,24 @@ namespace TerminalToDoList.Services
         {
             if (_terminalToDoListDataProvider.DeleteNote(idNote))
             {
-                _logger.Log(LogLevel.Info, "Note deleted!");
-                _logger.Log(LogLevel.Info, "...");
-                Console.ReadLine();
+                _logger.Log(LogLevel.Info, $"Note {idNote} deleted!");
+                _logger.Log(LogLevel.Info, $"");
                 return;
             }
-            _logger.Log(LogLevel.Info, $"Note {idNote} not present!");
+            _logger.Log(LogLevel.Warning, $"Note {idNote} not present!");
+            _logger.Log(LogLevel.Info, $"");
+        }
+
+        /// <inheritdoc cref="ITerminalToDoListService.DeleteAllNotes()"/>
+        public void DeleteAllNotes()
+        {
+            if (_terminalToDoListDataProvider.DeleteAllNotes())
+            {
+                _logger.Log(LogLevel.Info, $"Notes deleted!");
+                _logger.Log(LogLevel.Info, $"");
+                return;
+            }
+            _logger.Log(LogLevel.Info, $"");
         }
 
         /// <inheritdoc cref="ITerminalToDoListService.ViewNote(int)"/>
@@ -102,9 +114,10 @@ namespace TerminalToDoList.Services
 
         private void PrintNote(List<Note> notes)
         {
-            if(notes == null || ! notes.Any())
+            if (notes == null || !notes.Any())
             {
                 _logger.Log(LogLevel.Info, "No note to show.");
+                _logger.Log(LogLevel.Info, $"");
                 return;
             }
 
@@ -114,8 +127,8 @@ namespace TerminalToDoList.Services
                 _logger.Log(LogLevel.Info, formattedNote);
             }
 
-            _logger.Log(LogLevel.Info, "...");
-            Console.ReadLine();
+            _logger.Log(LogLevel.Info, $"");
+            _logger.ReadLine("Press a key to show the menu..");
         }
     }
 }

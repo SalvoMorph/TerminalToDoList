@@ -4,7 +4,7 @@
     /// The TerminalToDoList Constants.
     /// </summary>
     public class TerminalToDoListConstants
-	{
+    {
         /// <summary>
         /// The Log Level.
         /// </summary>
@@ -13,6 +13,7 @@
             Info,
             Warning,
             Error,
+            ReadLine,
             None
         }
 
@@ -39,6 +40,11 @@
             /// <summary>
             /// White for tdefault.
             /// </summary>
+            public const ConsoleColor ReadLine = ConsoleColor.Magenta;
+
+            /// <summary>
+            /// White for tdefault.
+            /// </summary>
             public const ConsoleColor Default = ConsoleColor.White;
         }
 
@@ -46,15 +52,15 @@
         /// The CmdLine arguments.
         /// </summary>
         public class CmdLineArgs
-		{
-			public const string AddNote = "-a";
-			public const string DeleteNote = "-d";
-			public const string CompleteNote = "-c";
-			public const string ViewNote = "-v";
+        {
+            public const string AddNote = "-a";
+            public const string DeleteNote = "-d";
+            public const string CompleteNote = "-c";
+            public const string ViewNote = "-v";
             public const string ViewCompletedNote = "-vc";
 
-			public const string All = "ALL";
-		}
+            public const string All = "ALL";
+        }
 
         /// <summary>
         /// The User choice.
@@ -62,13 +68,14 @@
         public enum UserChoice
         {
             Add = 1,
-            View = 2,
-            ViewAll = 3,
-            ViewCompleted= 4,
-            ViewAllCompleted = 5,
-            Complete = 6,
-            Delete = 7,
-            Exit = 8
+            Complete = 2,
+            Delete = 3,
+            View = 4,
+            ViewCompleted = 5,
+            ViewAll = 6,
+            ViewAllCompleted = 7,
+            DeleteAll = 8,
+            Exit = 9
         }
     }
 }
