@@ -58,6 +58,8 @@
             public const string CompleteNote = "-c";
             public const string ViewNote = "-v";
             public const string ViewCompletedNote = "-vc";
+            public const string Help = "-h";
+            public const string HelpExt = "-help";
 
             public const string All = "ALL";
         }

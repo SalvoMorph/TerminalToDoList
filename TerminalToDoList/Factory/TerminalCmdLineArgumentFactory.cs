@@ -17,9 +17,9 @@ namespace TerminalToDoList
         /// Ctor of <see cref="TerminalCmdLineArgumentFactory"/>.
         /// </summary>
         public TerminalCmdLineArgumentFactory()
-		{
+        {
             _logger = new ConsoleLogger();
-		}
+        }
 
         /// <summary>
         /// Ctor of <see cref="TerminalCmdLineArgumentFactory"/>.
@@ -50,17 +50,30 @@ namespace TerminalToDoList
 
             switch (args[0].ToLowerInvariant())
             {
+                case CmdLineArgs.Help:
+                case CmdLineArgs.HelpExt:
+                    _logger.ShowHelpMenu();
+                    return result;
                 case CmdLineArgs.AddNote:
                     result.CmdLineArg = UserChoice.Add;
                     break;
                 case CmdLineArgs.DeleteNote:
+                    if (args.Length < 2 || args[1] == CmdLineArgs.All)
+                    {
+                        if (_logger.ReadLine("Are you sure (Y/N) ?").ToUpper() == "Y")
+                        {
+                            result.CmdLineArg = UserChoice.DeleteAll;
+                            result.CmdLineValue = CmdLineArgs.All;
+                        }
+                        return result;
+                    }
                     result.CmdLineArg = UserChoice.Delete;
                     break;
                 case CmdLineArgs.CompleteNote:
                     result.CmdLineArg = UserChoice.Complete;
                     break;
                 case CmdLineArgs.ViewNote:
-                    if (args[1] == CmdLineArgs.All)
+                    if (args.Length < 2 || args[1] == CmdLineArgs.All)
                     {
                         result.CmdLineArg = UserChoice.ViewAll;
                         result.CmdLineValue = CmdLineArgs.All;
@@ -69,7 +82,7 @@ namespace TerminalToDoList
                     result.CmdLineArg = UserChoice.View;
                     break;
                 case CmdLineArgs.ViewCompletedNote:
-                    if (args[1] == CmdLineArgs.All)
+                    if (args.Length < 2 || args[1] == CmdLineArgs.All)
                     {
                         result.CmdLineArg = UserChoice.ViewAllCompleted;
                         result.CmdLineValue = CmdLineArgs.All;
@@ -80,6 +93,12 @@ namespace TerminalToDoList
                 default:
                     _logger.Log(LogLevel.Error, $"Command {args[0]} is not valid.");
                     return null;
+            }
+
+            if (args.Length < 2)
+            {
+                _logger.Log(LogLevel.Error, $"Command {args[0]} has no option. Please see -help.");
+                return new TerminalCmdLineArgument();
             }
 
             result.CmdLineValue = args[1];

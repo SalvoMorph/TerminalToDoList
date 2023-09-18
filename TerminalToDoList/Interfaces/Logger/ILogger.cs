@@ -29,6 +29,6 @@ namespace TerminalToDoList.Interfaces.Logger
         /// </summary>
         /// <param name="message">The message to show.</param>
         /// <returns>Returns the digited input.</returns>
-        string ReadLine(string message);
+        string? ReadLine(string message);
     }
 }

@@ -28,7 +28,7 @@ namespace TerminalToDoList.Logger
         }
 
         /// <inheritdoc cref="ILogger.ReadLine(string)"/>
-        public string ReadLine(string message)
+        public string? ReadLine(string message)
         {
             Console.ForegroundColor = GetColorForLogLevel(LogLevel.ReadLine);
             Console.WriteLine();
@@ -76,14 +76,20 @@ namespace TerminalToDoList.Logger
         private static string GetHelpMenuText()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("######################################### Terminal ToDoList menu #########################################");
+            sb.AppendLine("####################################### Terminal ToDoList menu #######################################");
             sb.AppendLine("# TerminalToDoList [options]");
             sb.AppendLine("#");
-            sb.AppendLine("# -note          Add a note.");
-            sb.AppendLine("# -v             View a note. All to see all the notes.");
-            sb.AppendLine("# -c             Complete an activity.");
-            sb.AppendLine("# -d             Delete an activity.");
-            sb.AppendLine("#########################################################################################################");
+            sb.AppendLine("# -a                 Add a note.");
+            sb.AppendLine("# -v  [opt]          View a note. You can specify an ID or you can use ");
+            sb.AppendLine("#                    All or nothing to show all the notes..");
+            sb.AppendLine("#");
+            sb.AppendLine("# -vc [opt]          View a completed note. You can specify an ID or you can use");
+            sb.AppendLine("#                    All or nothing to show all the completed notes..");
+            sb.AppendLine("#");
+            sb.AppendLine("# -c  [opt]          Complete a note. You have to specify an ID.");
+            sb.AppendLine("# -d  [opt]          Delete a note. You can specify an ID or you can use");
+            sb.AppendLine("#                    All or nothing to delete all the notes..");
+            sb.AppendLine("#####################################################################################################");
             return sb.ToString();
         }
 
