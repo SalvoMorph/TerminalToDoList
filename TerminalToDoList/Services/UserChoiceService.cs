@@ -8,8 +8,7 @@ namespace TerminalToDoList.Services
 	public class UserChoiceService : IUserChoiceService
     {
         private readonly ITerminalToDoListService _terminalToDoListService;
-
-        Dictionary<UserChoice, Action<string>> CommandMap = new();
+        private Dictionary<UserChoice, Action<string>> CommandMap = new();
 
         #region Ctor
 
@@ -53,6 +52,7 @@ namespace TerminalToDoList.Services
                 { UserChoice.ViewAllCompleted, _ => _terminalToDoListService.ViewAllCompletedNote() },
                 { UserChoice.Complete, id => _terminalToDoListService.CompleteNote(Convert.ToInt32(id)) },
                 { UserChoice.Delete, id => _terminalToDoListService.DeleteNote(Convert.ToInt32(id)) },
+                { UserChoice.DeleteAll, _ => _terminalToDoListService.DeleteAllNotes() },
             };
         }
     }

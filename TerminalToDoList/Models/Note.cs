@@ -1,11 +1,10 @@
-﻿using System;
-namespace TerminalToDoList.Models
+﻿namespace TerminalToDoList.Models
 {
     /// <summary>
     /// A note.
     /// </summary>
     public class Note
-	{
+    {
         /// <summary>
         /// The note ID.
         /// </summary>
@@ -26,17 +25,21 @@ namespace TerminalToDoList.Models
         /// </summary>
         public DateTime CompletedDate { get; set; }
 
+        public bool IsCompleted { get; }
+
         /// <summary>
         /// Ctor of <see cref="Note"/>.
         /// </summary>
         /// <param name="idNote">The note id.</param>
         /// <param name="message">The message.</param>
         /// <param name="creationDate">The creation date.</param>
-        public Note(int idNote, string message, DateTime creationDate)
+        public Note(int idNote, string message, DateTime creationDate, DateTime completedDate)
         {
             IdNote = idNote;
             Message = message;
             CreationDate = creationDate;
+            CompletedDate = completedDate;
+            IsCompleted = completedDate != DateTime.MinValue;
         }
-	}
+    }
 }

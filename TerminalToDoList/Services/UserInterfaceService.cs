@@ -43,7 +43,7 @@ namespace TerminalToDoList.Services
             {
                 _logger.ShowMenu();
 
-                if (Enum.TryParse(Console.ReadLine(), out UserChoice choice))
+                if (Enum.TryParse(_logger.ReadLine("=> "), out UserChoice choice))
                 {
                     var argument = new TerminalCmdLineArgument() { CmdLineArg = choice };
 
@@ -53,8 +53,12 @@ namespace TerminalToDoList.Services
                     }
                     else if (choice == UserChoice.Exit)
                     {
-                        _logger.Log(LogLevel.Info, "Goodbye!");
-                        return;
+                        if (ReadFromConsole("Are you sure (Y/N) ?").ToUpper() == "Y")
+                        {
+                            _logger.Log(LogLevel.Info, "Goodbye!");
+                            return;
+                        }
+                        continue;
                     }
 
                     _commandLineService.CallProperService(argument);
@@ -66,13 +70,13 @@ namespace TerminalToDoList.Services
             }
         }
 
-        private bool IsInputRequired(UserChoice choice)
+        private static bool IsInputRequired(UserChoice choice)
         {
             return choice == UserChoice.View || choice == UserChoice.ViewCompleted ||
                    choice == UserChoice.Complete || choice == UserChoice.Delete || choice == UserChoice.Add;
         }
 
-        private string GetInputMessage(UserChoice choice)
+        private static string GetInputMessage(UserChoice choice)
         {
             return choice == UserChoice.Add ? "Add new activity: " : "Id note: ";
         }
@@ -82,11 +86,7 @@ namespace TerminalToDoList.Services
             string input;
             do
             {
-                _logger.Log(LogLevel.Info, message);
-
-#pragma warning disable CS8600 // Conversione del valore letterale Null o di un possibile valore Null in un tipo che non ammette i valori Null.
-                input = Console.ReadLine();
-#pragma warning restore CS8600 // Conversione del valore letterale Null o di un possibile valore Null in un tipo che non ammette i valori Null.
+                input = _logger.ReadLine(message);
             } while (string.IsNullOrWhiteSpace(input));
 
             return input;

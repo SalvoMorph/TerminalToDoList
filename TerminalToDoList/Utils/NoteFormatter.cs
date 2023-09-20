@@ -7,7 +7,7 @@ namespace TerminalToDoList.Utils
     /// The formatter used to show the note.
     /// </summary>
 	public class NoteFormatter
-	{
+    {
         /// <summary>
         /// Format the note.
         /// </summary>
@@ -16,9 +16,17 @@ namespace TerminalToDoList.Utils
         public static string Format(Note note)
         {
             var sb = new StringBuilder();
-            sb.AppendLine(note.Message);
+            sb.AppendLine("------------------------------------");
+            sb.AppendLine("Text: ");
+            sb.AppendLine($"  {note.Message}");
             sb.AppendLine();
-            sb.AppendLine($"ID: {note.IdNote} - Created at: {note.CreationDate}");
+            sb.AppendLine($"Note id: {note.IdNote}");
+            sb.AppendLine($"Created at: {note.CreationDate}");
+
+            if (note.IsCompleted)
+                sb.AppendLine($"Completed at: {note.CompletedDate}");
+
+            sb.AppendLine("------------------------------------");
             return sb.ToString();
         }
     }
